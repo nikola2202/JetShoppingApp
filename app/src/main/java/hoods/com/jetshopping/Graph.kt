@@ -9,7 +9,7 @@ object Graph {
     lateinit var db: ShoppingListDatabase
         private set
 
-    val repostitory by lazy {
+    val repository by lazy {
         Repository(
             listDao = db.listDao(),
             storeDao = db.storeDao(),
