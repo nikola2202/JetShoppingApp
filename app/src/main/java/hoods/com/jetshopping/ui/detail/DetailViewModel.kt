@@ -105,7 +105,7 @@ class DetailViewModel
                       listId = state.category.id,
                       date = state.date,
                       qty = state.qty,
-                      storeIdFk = state.storelist.find {
+                      storeIdFk = state.storeList.find {
                           it.storeName == state.store
                       }?.id ?: 0,
                       isChecked = false
@@ -122,7 +122,7 @@ class DetailViewModel
                       listId = state.category.id,
                       date = state.date,
                       qty = state.qty,
-                      storeIdFk = state.storelist.find {
+                      storeIdFk = state.storeList.find {
                           it.storeName == state.store
                       }?.id ?: 0,
                       isChecked = false,
@@ -146,7 +146,7 @@ class DetailViewModel
       fun getStores() {
           viewModelScope.launch {
               repository.store.collectLatest {
-                  state = state.copy(storelist = it)
+                  state = state.copy(storeList = it)
               }
           }
       }
@@ -168,7 +168,7 @@ class DetailViewModelFactory(private val id:Int):ViewModelProvider.Factory {
 }
 
 data class DetailState(
-    val storelist: List<Store> = emptyList(),
+    val storeList: List<Store> = emptyList(),
     val item: String = "",
     val store: String = "",
     val date: Date = Date(),

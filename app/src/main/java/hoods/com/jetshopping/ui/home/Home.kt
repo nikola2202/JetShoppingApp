@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     onNavigate:(Int) -> Unit
@@ -61,15 +63,33 @@ fun HomeScreen(
                 }
             }
             items(homeState.items) {
-                ShoppingItems(
-                    item = it,
-                    isChecked = it.item.isChecked,
-                    onCheckedChange = homeViewModel::onItemCheckedChange
-                ) {
+                val dismissState = rememberDismissState(
+                    confirmStateChange = { value ->
+                        if (value == DismissValue.DismissedToEnd) {
+                            homeViewModel.deleteItems(it.item)
+                        }
+                        true
+                    }
+                )
 
-                    onNavigate.invoke(it.item.id)
+                SwipeToDismiss(
+                    state = dismissState, 
+                    background = {
+                        Surface(modifier = Modifier.fillMaxWidth(), color = Color.Red
+                        ) {
 
-                }
+                        }
+                    },
+                    dismissContent = {
+                        ShoppingItems(
+                            item = it,
+                            isChecked = it.item.isChecked,
+                            onCheckedChange = homeViewModel::onItemCheckedChange
+                        ) {
+                            onNavigate.invoke(it.item.id)
+                        }
+                    }
+                )
             }
         }
         
